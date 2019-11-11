@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="design.cyoung">
+
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -12,7 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -23,9 +23,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CardScannerActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="@string/simple_scanner_activity">
+        <activity
+            android:name=".CardScannerActivity"
+            android:label="@string/simple_scanner_activity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".SaveCard">
         </activity>
     </application>
 

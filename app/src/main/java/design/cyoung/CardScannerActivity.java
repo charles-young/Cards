@@ -1,10 +1,19 @@
 package design.cyoung;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -37,7 +46,18 @@ public class CardScannerActivity extends Activity implements ZXingScannerView.Re
         Log.v("", rawResult.getText()); // Prints scan results
         Log.v("", rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
 
+        Gson gson = new Gson();
+        String barcodeFormat = gson.toJson(rawResult.getBarcodeFormat(), BarcodeFormat.class);
+        Intent intent = new Intent(CardScannerActivity.this, SaveCard.class);
+        intent.putExtra("BarcodeText", rawResult.getText());
+        intent.putExtra("BarcodeFormat", barcodeFormat);
+        startActivity(intent);
+
+        finish();
+
+
         // If you would like to resume scanning, call this method below:
-        mScannerView.resumeCameraPreview(this);
+        //mScannerView.resumeCameraPreview(this);
+        //this.onBackPressed();
     }
 }

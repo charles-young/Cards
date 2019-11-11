@@ -1,14 +1,27 @@
 package design.cyoung;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,14 +30,18 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private static final int ZXING_CAMERA_PERMISSION = 1;
@@ -35,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private List<Card> cards;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,22 +85,26 @@ public class MainActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        initializeData();
+        getPrefs();
 
         // specify an adapter (see also next example)
-        mAdapter = new CardAdapter(cards);
+        mAdapter = new CardAdapter(cards, this);
         recyclerView.setAdapter(mAdapter);
     }
 
-    private void initializeData() {
-        cards = new ArrayList<>();
-        cards.add(new Card("Kroger", new ArrayList<>(Arrays.asList(1, 2, 3))));
-        cards.add(new Card("Sam's Club", new ArrayList<>(Arrays.asList(4, 5, 6))));
-        cards.add(new Card("Costco", new ArrayList<>(Arrays.asList(7, 8, 9))));
-        cards.add(new Card("Costco", new ArrayList<>(Arrays.asList(7, 8, 9))));
-        cards.add(new Card("Costco", new ArrayList<>(Arrays.asList(7, 8, 9))));
+    @Override
+    protected void onResume() {
+        getPrefs();
+        recyclerView.setAdapter(new CardAdapter(cards, this));
+        super.onResume();
+    }
 
+    private void getPrefs() {
+        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences("CardStore", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
 
+        cards = gson.fromJson(mPrefs.getString("CardList", gson.toJson(new ArrayList<Card>())), new TypeToken<List<Card>>() {
+        }.getType());
     }
 
     @Override

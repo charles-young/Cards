@@ -1,20 +1,25 @@
 package design.cyoung;
 
+import com.google.zxing.BarcodeFormat;
+
 import java.util.ArrayList;
 
 public class Card {
     private String displayTitle, displaySubtitle = "";
-    private ArrayList<Integer> selectedIndicis;
+    private BarcodeFormat barcodeFormat;
+    private String barcodeText;
 
-    public Card(String displayTitle, ArrayList<Integer> selectedIndicis) {
+    public Card(String displayTitle, String barcodeText, BarcodeFormat barcodeFormat) {
         this.displayTitle = displayTitle;
-        this.selectedIndicis = selectedIndicis;
+        this.barcodeText = barcodeText;
+        this.barcodeFormat = barcodeFormat;
     }
 
-    public Card(String displayTitle, String displaySubtitle, ArrayList<Integer> selectedIndicis) {
+    public Card(String displayTitle, String displaySubtitle, String barcodeText, BarcodeFormat barcodeFormat) {
         this.displayTitle = displayTitle;
         this.displaySubtitle = displaySubtitle;
-        this.selectedIndicis = selectedIndicis;
+        this.barcodeText = barcodeText;
+        this.barcodeFormat = barcodeFormat;
     }
 
     public String getDisplayTitle() {
@@ -25,7 +30,11 @@ public class Card {
         return displaySubtitle;
     }
 
-    public ArrayList<Integer> getSelectedIndicis() {
-        return selectedIndicis;
+    public String getBarcodeText() {
+        return barcodeText;
+    }
+
+    public BarcodeFormat getBarcodeFormat() {
+        return barcodeFormat;
     }
 }
